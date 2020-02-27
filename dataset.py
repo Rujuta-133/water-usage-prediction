@@ -6,7 +6,7 @@ import tensorflow
 
 
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, InputLayer
 
 # d = pd.read_csv("aguah_row_small.csv")
 c=0
@@ -47,7 +47,7 @@ M = ["ABB", "ACTARIS", "ADCOM", "ALFA", "AQUARIUS", "ARAD", "AV3STARS", "AZTECA"
 # ]
 
 cat_ranges = [10, 20, 30, 40, 50, 60, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000,
-              6500, 7000, 100000]
+              6500, 7000, 200000]
 num_cats = len(cat_ranges)
 categories = []
 
@@ -89,74 +89,29 @@ for d in data2:
             break
     y.append(np.array(c))
 
-    # if c!=0: c=10*math.ceil(math.log(c)/10)
-    # if 0 <= c <= 10:
-    #     c = categories[0]
-    # elif 10 < c <= 20:
-    #     c = categories[1]
-    # elif 20 < c <= 30:
-    #     c = categories[2]
-    # elif 30 < c <= 40:
-    #     c = categories[3]
-    # elif 40 < c <= 50:
-    #     c = categories[4]
-    # elif 50 < c <= 60:
-    #     c = categories[5]
-    # elif 700 < c <= 800:
-    #     c = categories[4]
-    # elif 800 < c <= 900:
-    #     c = categories[5]
-    # elif 900 < c <= 1000:
-    #     c = categories[6]
-    # elif 1000 < c <= 1100:
-    #     c = categories[7]
-    # elif c > 1100:
-    #     c = categories[8]
-    # else:
-    #     print('c', c)
-    # else:
-    #     c = categories[0]
-    # print(type(c))
-    # y.append(np.array(c))
-    # print(len(y))
-
-# exit()
-
-# for d in data2:
-#     print(d)
 
 # print('features', X)
 # print('classes', y)
 print(c)
 model = Sequential()
-# model.add(Dense(10, activation='relu'))
-model.add(Dense(6, activation='relu'))
-model.add(Dense(6, activation='relu'))
+model.add(InputLayer(input_shape=(len(X[0]))))
+model.add(Dense(128, activation='relu'))
+model.add(Dense(128, activation='relu'))
+model.add(Dense(128, activation='relu'))
+model.add(Dense(128, activation='relu'))
+model.add(Dense(128, activation='relu'))
 model.add(Dense(num_cats, activation='softmax'))
 
 # model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
-optimizer=tensorflow.keras.optimizers.Adam(learning_rate=1, decay= 0.001)
+optimizer=tensorflow.keras.optimizers.Adam(learning_rate=.0001) #, decay= 0.001)
 model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
-# print(type(X))
-# print(type(X[0]))
-
-# print(type(y[0]))
-
-# y=np.array(y,dtype=float)
-
-# y2=np.array([])
-# for i in y:
-#     # print(i)
-#     y2=np.append(y2, i, axis=0 )
-# type(y2)
-# print(X.shape)
-# print(y2.shape)
-
-# y2 = np.asarray(y)
 
 X = np.array(X, dtype=float)
 y2 = np.array(y, dtype=float)
 
-model.fit(X, y2, epochs=10000, validation_split=.05, shuffle=True, batch_size=2000)
-print(c)
+print(X.shape)
+print(y2.shape)
+
+
+model.fit(X, y2, epochs=10000, validation_split=.05, shuffle=True, batch_size=65536, validation_freq=10)

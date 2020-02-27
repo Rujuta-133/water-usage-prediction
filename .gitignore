@@ -1,1 +1,6 @@
 dataset/
+/DataSan/nbproject/private/
+/DataSan/build/
+*.csv
+*.txt
+*.zip
