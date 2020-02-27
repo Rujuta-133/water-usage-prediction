@@ -3,10 +3,13 @@ import numpy as np
 import math
 
 import tensorflow
+
+
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
 # d = pd.read_csv("aguah_row_small.csv")
+c=0
 d = pd.read_csv("aguah_row.csv")
 
 X = []
@@ -61,7 +64,11 @@ count=0
 for d in data2:
     count += 1
     if count>100000:
+
         break
+    if(d[7]>10000):
+        data2.remove(d)
+        c=c+1
     # if (d[0] in USO2013):
     d[0] = USO2013.index(d[0])
     # for d in data2:
@@ -120,7 +127,7 @@ for d in data2:
 
 # print('features', X)
 # print('classes', y)
-
+print(c)
 model = Sequential()
 # model.add(Dense(10, activation='relu'))
 model.add(Dense(6, activation='relu'))
@@ -151,4 +158,5 @@ model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['ac
 X = np.array(X, dtype=float)
 y2 = np.array(y, dtype=float)
 
-model.fit(X, y2, epochs=1000, validation_split=.05, shuffle=True)
+model.fit(X, y2, epochs=10000, validation_split=.05, shuffle=True, batch_size=2000)
+print(c)
